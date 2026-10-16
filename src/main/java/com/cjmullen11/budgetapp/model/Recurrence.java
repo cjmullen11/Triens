@@ -1,6 +1,9 @@
-public package main.java.com.cjmullen11.budgetapp.model;
 
-enum Recurrence {
-
-    
+public enum Recurrence {
+    ONCE,
+    DAILY,
+    WEEKLY,
+    BIWEEKLY,
+    MONTHLY,
+    YEARLY
 }

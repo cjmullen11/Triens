@@ -8,6 +8,7 @@ public abstract class AllocationStep {
     private boolean active;
 
     public Map<BudgetBucket, BigDecimal> allocate(BigDecimal available, Map<BudgetBucket, BigDecimal> balances, Map<BudgetBucket, BigDecimal> goalProgress) {
-
+        //TODO
+        return null;
     }
 }
