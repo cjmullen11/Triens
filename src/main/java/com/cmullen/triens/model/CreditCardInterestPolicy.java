@@ -1,3 +1,5 @@
+package com.cmullen.triens.model;
+
 import java.math.BigDecimal;
 import java.util.List;
 

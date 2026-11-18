@@ -1,3 +1,5 @@
+package com.cmullen.triens.model;
+
 public enum TransactionType {
     INCOME,
     DEPOSIT,

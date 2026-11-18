@@ -1,3 +1,4 @@
+package com.cmullen.triens.model;
 
 public enum Recurrence {
     ONCE,

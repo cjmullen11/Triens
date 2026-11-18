@@ -1,3 +1,5 @@
+package com.cmullen.triens.model;
+
 
 public class BudgetBucket extends LedgerAccount{
     private BudgetBucket parentBucket;
