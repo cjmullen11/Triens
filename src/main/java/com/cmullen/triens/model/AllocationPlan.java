@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,10 +20,13 @@ public class AllocationPlan {
     @Column (nullable = false)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "plan_id")
+    @OneToMany(
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @JoinColumn(name = "plan_id", nullable = false)
     @OrderBy("position ASC")
-    private List<AllocationStep> steps = new java.util.ArrayList<>();
+    private List<AllocationStep> steps = new ArrayList<>();
 
     @Column (nullable = false)
     private boolean active;

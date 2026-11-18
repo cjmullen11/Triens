@@ -11,9 +11,9 @@ public class SecurityEntry extends TransactionEntry {
     @JoinColumn(name = "security_id", nullable = false)
     private Security security;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 28, scale = 10)
     private BigDecimal quantity;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 28, scale = 10)
     private BigDecimal executionPrice;
 }
