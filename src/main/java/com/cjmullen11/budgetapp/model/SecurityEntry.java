@@ -1,11 +1,10 @@
 import java.math.BigDecimal;
-
-import main.java.com.cjmullen11.budgetapp.model.LedgerAccount;
+import java.time.Instant;
 
 public class SecurityEntry {
     private LedgerAccount account;
     private Security security;
     private BigDecimal quantity;
     private Instant createdAt;
-    private Instnat updatedAt;
+    private Instant updatedAt;
 }

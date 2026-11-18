@@ -1,6 +1,4 @@
-public package main.java.com.cjmullen11.budgetapp.model;
-
-import main.java.com.cjmullen11.budgetapp.model.LedgerAccount;
+import java.math.BigDecimal;
 
 public class LedgerEntry extends TransactionEntry{
     private LedgerAccount account;

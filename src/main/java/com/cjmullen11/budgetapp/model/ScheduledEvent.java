@@ -1,3 +1,6 @@
+import java.time.Instant;
+import java.util.UUID;
+
 public abstract class ScheduledEvent {
     private UUID id;
     private String name;

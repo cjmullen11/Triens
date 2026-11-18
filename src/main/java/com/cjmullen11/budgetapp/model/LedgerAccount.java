@@ -1,4 +1,3 @@
-package main.java.com.cjmullen11.budgetapp.model;
 
 import java.time.Instant;
 import java.util.Currency;

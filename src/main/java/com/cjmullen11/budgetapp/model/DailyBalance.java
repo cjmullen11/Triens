@@ -1,6 +1,7 @@
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class DailyBalance {
-    private date LocalDate;
-    private BigDecimal balance;
+    LocalDate date;
+    BigDecimal balance;
 }

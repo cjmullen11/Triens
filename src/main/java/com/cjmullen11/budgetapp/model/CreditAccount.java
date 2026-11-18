@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.util.List;
 
 public class CreditAccount extends FinancialAccount {
     private BigDecimal limit;
@@ -12,5 +13,11 @@ public class CreditAccount extends FinancialAccount {
 
     public BigDecimal getUtilization(BigDecimal balance) {
         return balance.divide(limit);
+    }
+
+    @Override
+    public BigDecimal calculateInterest(List<DailyBalance> balances) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'calculateInterest'");
     }
 }

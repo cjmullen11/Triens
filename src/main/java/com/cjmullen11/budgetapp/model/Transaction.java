@@ -1,4 +1,7 @@
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
 
 public class Transaction {
     private UUID id;
@@ -15,7 +18,7 @@ public class Transaction {
 
     public boolean isPartiallySettled() {
         //TODO 
-        return false
+        return false;
     }
 
     public boolean isFullySettled() {
