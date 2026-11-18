@@ -3,8 +3,20 @@ package com.cmullen.triens.model;
 import java.time.Instant;
 import java.util.UUID;
 
+import jakarta.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class TransactionEntry {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_id", nullable = false)
+    private LedgerAccount account;
+
     private Instant settledAt;
 
     public boolean isSettled() {

@@ -3,6 +3,9 @@ package com.cmullen.triens.model;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import jakarta.persistence.Entity;
+
+@Entity 
 public class FillToGoalStep extends AllocationStep{
 
     @Override

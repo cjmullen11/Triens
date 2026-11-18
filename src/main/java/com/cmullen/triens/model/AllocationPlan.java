@@ -15,11 +15,38 @@ public class AllocationPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column (nullable = false)
     private String name;
-    private List<AllocationStep> steps;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "plan_id")
+    @OrderBy("position ASC")
+    private List<AllocationStep> steps = new java.util.ArrayList<>();
+
+    @Column (nullable = false)
     private boolean active;
+
+    @Column (nullable = false)
     private Instant createdAt;
+
+    @Column (nullable = false)
     private Instant updatedAt;
+
+    protected AllocationPlan() {
+        // JPA
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+        updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now(); 
+    } 
 
 
     public BigDecimal allocate(BigDecimal available, Map<BudgetBucket, BigDecimal> balances, Map<BudgetBucket, BigDecimal> goalProgress){
