@@ -22,4 +22,8 @@ public abstract class TransactionEntry {
     public boolean isSettled() {
         return settledAt != null;
     }
+
+    public TransactionEntry(LedgerAccount account) {
+        this.account = account;
+    }
 }

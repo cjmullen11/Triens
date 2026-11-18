@@ -20,7 +20,6 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
@@ -46,6 +45,8 @@ public class Transaction {
     private Instant createdAt;
 
     private Instant updatedAt;
+
+    private Instant initiatedAt;
 
     private Instant cancelledAt;
 
@@ -77,6 +78,24 @@ public class Transaction {
     protected Transaction() {
         //JPA
     }
+
+
+    // Construct an immediately initiated transaction.
+    public Transaction(
+            String description,
+            TransactionType type,
+            LocalDate effectiveDate,
+            List<TransactionEntry> entries) {
+
+        this.description = description;
+        this.type = type;
+        this.effectiveDate = effectiveDate;
+        this.entries = new ArrayList<>(entries);
+
+        this.status = TransactionStatus.INITIATED;
+        this.initiatedAt = Instant.now();
+    }
+
 
     public boolean isPartiallySettled() {
         //TODO 

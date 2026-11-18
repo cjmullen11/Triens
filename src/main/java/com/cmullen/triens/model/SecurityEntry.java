@@ -16,4 +16,11 @@ public class SecurityEntry extends TransactionEntry {
 
     @Column(nullable = false, precision = 28, scale = 10)
     private BigDecimal executionPrice;
+
+    public SecurityEntry(LedgerAccount account, Security security, BigDecimal quantity, BigDecimal executionPrice) {
+        super(account);
+        this.security = security;
+        this.quantity = quantity;
+        this.executionPrice = executionPrice;
+    }
 }

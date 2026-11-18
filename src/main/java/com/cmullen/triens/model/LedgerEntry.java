@@ -10,4 +10,9 @@ public class LedgerEntry extends TransactionEntry {
 
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
+
+    public LedgerEntry(LedgerAccount account, BigDecimal amount) {
+        super(account);
+        this.amount = amount;
+    }
 }
