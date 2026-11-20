@@ -1,11 +1,5 @@
 package com.cmullen.triens.model;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,93 +16,124 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-@Entity 
+@Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Transaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id @GeneratedValue(strategy = GenerationType.UUID) private UUID id;
 
-    private String description;
+  private String description;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TransactionType type;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private TransactionType type;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TransactionStatus status;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private TransactionStatus status;
 
-    private LocalDate effectiveDate;
+  // finanical date of transaction, aka business day it is
+  private LocalDate effectiveDate;
 
-    private Instant createdAt;
+  private Instant createdAt;
 
-    private Instant updatedAt;
+  private Instant updatedAt;
 
-    private Instant initiatedAt;
+  // When the transaction begins to take effect
+  private Instant initiatedAt;
 
-    private Instant cancelledAt;
+  // time of cancellation.
+  // only able to cancel if not initiated.
+  private Instant cancelledAt;
 
-    @OneToMany(
-        fetch = FetchType.LAZY,
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    @JoinColumn(name = "transaction_id", nullable = false)
-    private List<TransactionEntry> entries = new ArrayList<>();
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+             orphanRemoval = true)
+  @JoinColumn(name = "transaction_id", nullable = false)
+  private List<TransactionEntry> entries = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "source_id")
-    private ScheduledEvent source;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "source_id")
+  private ScheduledEvent source;
 
-    private LocalDate scheduledDate;
+  @PrePersist
+  protected void onCreate() {
+    createdAt = Instant.now();
+    updatedAt = createdAt;
+  }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = Instant.now();
-        updatedAt = createdAt;
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = Instant.now();
+  }
+
+  protected Transaction() {
+    // JPA
+  }
+
+  public Transaction(String description, TransactionType type,
+                     TransactionStatus status, LocalDate effectiveDate,
+                     List<TransactionEntry> entries, ScheduledEvent source) {
+    this.description = description;
+    this.type = type;
+    this.status = status;
+    this.effectiveDate = effectiveDate;
+    this.entries = entries;
+    this.source = source;
+  }
+
+  public boolean isPartiallySettled() {
+    boolean hasSettled = false;
+    boolean hasUnsettled = false;
+
+    for (TransactionEntry entry : entries) {
+      if (entry.isSettled()) {
+        hasSettled = true;
+      } else {
+        hasUnsettled = true;
+      }
+
+      if (hasSettled && hasUnsettled) {
+        return true;
+      }
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = Instant.now(); 
-    } 
+    return false;
+  }
 
-    protected Transaction() {
-        //JPA
-    }
-
-
-    // Construct an immediately initiated transaction.
-    public Transaction(
-            String description,
-            TransactionType type,
-            LocalDate effectiveDate,
-            List<TransactionEntry> entries) {
-
-        this.description = description;
-        this.type = type;
-        this.effectiveDate = effectiveDate;
-        this.entries = new ArrayList<>(entries);
-
-        this.status = TransactionStatus.INITIATED;
-        this.initiatedAt = Instant.now();
-    }
-
-
-    public boolean isPartiallySettled() {
-        //TODO 
+  public boolean isFullySettled() {
+    for (TransactionEntry entry : entries) {
+      if (!entry.isSettled()) {
         return false;
+      }
     }
 
-    public boolean isFullySettled() {
-        //TODO
-        return false;
-    }
+    return true;
+  }
 
-    public boolean canCancel() {
-        //TODO
-        return false;
+  public boolean canCancel() { return status == TransactionStatus.PROPOSED; }
+
+  public boolean canInitiate() { return status == TransactionStatus.PROPOSED; }
+
+  public void initiate() {
+    if (!canInitiate()) {
+      throw new IllegalStateException("Transaction is already: " +
+                                      status.toString());
     }
+    status = TransactionStatus.INITIATED;
+    initiatedAt = Instant.now();
+  }
+
+  public void cancel() {
+    if (!canCancel()) {
+      throw new IllegalStateException("Transaction is already: " +
+                                      status.toString());
+    }
+    status = TransactionStatus.CANCELLED;
+    cancelledAt = Instant.now();
+  }
 }

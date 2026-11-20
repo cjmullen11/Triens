@@ -1,7 +1,10 @@
 package com.cmullen.triens.model;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
+
+import org.apache.logging.log4j.spi.LocationAwareLogger;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,6 +43,8 @@ public abstract class ScheduledEvent {
     @Column (nullable = false)
     private Instant updatedAt;
 
+    //last run of this scheduled event (creating a PROPOSED transaction),
+    //not the last time the transaction actually occured.
     private Instant lastRun;
 
     private Instant cancelledAt;
@@ -68,4 +73,10 @@ public abstract class ScheduledEvent {
     private Instant calculateNextRun() {
         return null;
     }
+
+    //the last time this scheduled event ran, not necessarily that its corresponding transaction occured.
+    public LocalDate getLastRun() {
+        return lastRun;
+    }
+    
 }

@@ -53,4 +53,8 @@ public abstract class LedgerAccount{
 
     @Column(nullable = false)
     private Currency currency;
+
+    public String getName() {
+        return name;
+    }
 }
