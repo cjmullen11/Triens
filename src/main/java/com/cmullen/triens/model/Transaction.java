@@ -25,7 +25,9 @@ import java.util.UUID;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Transaction {
-  @Id @GeneratedValue(strategy = GenerationType.UUID) private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
   private String description;
 
@@ -51,9 +53,11 @@ public class Transaction {
   // only able to cancel if not initiated.
   private Instant cancelledAt;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
-             orphanRemoval = true)
-  @JoinColumn(name = "transaction_id", nullable = false)
+  @OneToMany(
+      mappedBy = "transaction",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
   private List<TransactionEntry> entries = new ArrayList<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -75,15 +79,27 @@ public class Transaction {
     // JPA
   }
 
-  public Transaction(String description, TransactionType type,
-                     TransactionStatus status, LocalDate effectiveDate,
-                     List<TransactionEntry> entries, ScheduledEvent source) {
+  public Transaction(
+      String description,
+      TransactionType type,
+      TransactionStatus status,
+      LocalDate effectiveDate,
+      List<TransactionEntry> entries,
+      ScheduledEvent source) {
     this.description = description;
     this.type = type;
     this.status = status;
     this.effectiveDate = effectiveDate;
-    this.entries = entries;
     this.source = source;
+
+    this.entries.addAll(entries);
+    for (TransactionEntry entry : this.entries) {
+      entry.setTransaction(this);
+    }
+  }
+
+  public LocalDate getEffectiveDate() {
+    return effectiveDate;
   }
 
   public boolean isPartiallySettled() {
@@ -115,14 +131,17 @@ public class Transaction {
     return true;
   }
 
-  public boolean canCancel() { return status == TransactionStatus.PROPOSED; }
+  public boolean canCancel() {
+    return status == TransactionStatus.PROPOSED;
+  }
 
-  public boolean canInitiate() { return status == TransactionStatus.PROPOSED; }
+  public boolean canInitiate() {
+    return status == TransactionStatus.PROPOSED;
+  }
 
   public void initiate() {
     if (!canInitiate()) {
-      throw new IllegalStateException("Transaction is already: " +
-                                      status.toString());
+      throw new IllegalStateException("Transaction is already: " + status.toString());
     }
     status = TransactionStatus.INITIATED;
     initiatedAt = Instant.now();
@@ -130,8 +149,7 @@ public class Transaction {
 
   public void cancel() {
     if (!canCancel()) {
-      throw new IllegalStateException("Transaction is already: " +
-                                      status.toString());
+      throw new IllegalStateException("Transaction is already: " + status.toString());
     }
     status = TransactionStatus.CANCELLED;
     cancelledAt = Instant.now();

@@ -1,12 +1,9 @@
 package com.cmullen.triens.service;
 
-import static org.mockito.Mockito.description;
-
 import com.cmullen.triens.dto.CreateLedgerEntryRequest;
 import com.cmullen.triens.dto.CreateSecurityEntryRequest;
 import com.cmullen.triens.dto.CreateTransactionEntryRequest;
 import com.cmullen.triens.dto.CreateTransactionRequest;
-import com.cmullen.triens.model.InterestEvent;
 import com.cmullen.triens.model.LedgerAccount;
 import com.cmullen.triens.model.LedgerEntry;
 import com.cmullen.triens.model.ScheduledEvent;
@@ -20,12 +17,10 @@ import com.cmullen.triens.repository.LedgerAccountRepository;
 import com.cmullen.triens.repository.SecurityRepository;
 import com.cmullen.triens.repository.TransactionEntryRepository;
 import com.cmullen.triens.repository.TransactionRepository;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

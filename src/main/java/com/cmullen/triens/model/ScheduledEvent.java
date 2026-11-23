@@ -1,11 +1,5 @@
 package com.cmullen.triens.model;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.UUID;
-
-import org.apache.logging.log4j.spi.LocationAwareLogger;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,66 +11,68 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import java.time.Instant;
+import java.util.UUID;
 
-@Entity 
+@Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ScheduledEvent {
-    @Id
-    @GeneratedValue (strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column (nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    private Instant nextRun;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Recurrence recurrence;
+  private Instant nextRun;
 
-    @Column (nullable = false)
-    private boolean active;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Recurrence recurrence;
 
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
+  @Column(nullable = false)
+  private boolean active;
 
-    @Column (nullable = false)
-    private Instant updatedAt;
+  @Column(nullable = false, updatable = false)
+  private Instant createdAt;
 
-    //last run of this scheduled event (creating a PROPOSED transaction),
-    //not the last time the transaction actually occured.
-    private Instant lastRun;
+  @Column(nullable = false)
+  private Instant updatedAt;
 
-    private Instant cancelledAt;
+  // last run of this scheduled event (creating a PROPOSED transaction),
+  // not the last time the transaction actually occured.
+  private Instant lastRun;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = Instant.now();
-        updatedAt = createdAt;
-    }
+  private Instant cancelledAt;
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = Instant.now(); 
-    } 
+  @PrePersist
+  protected void onCreate() {
+    createdAt = Instant.now();
+    updatedAt = createdAt;
+  }
 
-    protected ScheduledEvent() {
-        //JPA
-    }
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = Instant.now();
+  }
 
-    public boolean isDue(Instant now) {
-        //TODO
-        return false;
-    }
+  protected ScheduledEvent() {
+    // JPA
+  }
 
-    // To be called when run at dueDate
-    private Instant calculateNextRun() {
-        return null;
-    }
+  public boolean isDue(Instant now) {
+    // TODO
+    return false;
+  }
 
-    //the last time this scheduled event ran, not necessarily that its corresponding transaction occured.
-    public LocalDate getLastRun() {
-        return lastRun;
-    }
-    
+  // To be called when run at dueDate
+  private Instant calculateNextRun() {
+    return null;
+  }
+
+  // the last time this scheduled event ran, not necessarily that its corresponding transaction
+  // occured.
+  public Instant getLastRun() {
+    return lastRun;
+  }
 }

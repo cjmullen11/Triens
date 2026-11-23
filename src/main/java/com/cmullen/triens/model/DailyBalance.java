@@ -5,5 +5,11 @@ import java.time.LocalDate;
 
 public record DailyBalance(
     LocalDate date,
-    BigDecimal balance
-) {}
+    BigDecimal cashBalance,
+    BigDecimal holdingsBalance,
+    BigDecimal unsettledCashDelta,
+    BigDecimal unsettledHoldingsDelta) {
+  public BigDecimal totalValue() {
+    return cashBalance.add(holdingsBalance);
+  }
+}
