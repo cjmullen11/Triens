@@ -12,6 +12,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -24,7 +25,7 @@ public abstract class ScheduledEvent {
   @Column(nullable = false)
   private String name;
 
-  private Instant nextRun;
+  private LocalDate nextRun;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -41,7 +42,7 @@ public abstract class ScheduledEvent {
 
   // last run of this scheduled event (creating a PROPOSED transaction),
   // not the last time the transaction actually occured.
-  private Instant lastRun;
+  private LocalDate lastRun;
 
   private Instant cancelledAt;
 
@@ -58,6 +59,12 @@ public abstract class ScheduledEvent {
 
   protected ScheduledEvent() {
     // JPA
+  }
+
+  public ScheduledEvent(String name, Recurrence recurrence, LocalDate nextRun) {
+    this.name = name;
+    this.recurrence = recurrence;
+    this.nextRun = nextRun;
   }
 
   public boolean isDue(Instant now) {
