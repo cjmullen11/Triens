@@ -1,27 +1,25 @@
 package com.cmullen.triens.model;
 
-import java.time.YearMonth;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDate;
 
-@Entity 
-public class InterestEvent extends ScheduledEvent{
+@Entity
+public class InterestEvent extends ScheduledEvent {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "account_id", nullable = false)
-    private FinancialAccount account;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "account_id", nullable = false)
+  private FinancialAccount account;
 
-    private YearMonth yearMonth;
+  public InterestEvent(
+      String name, Recurrence recurrence, LocalDate nextRun, FinancialAccount account) {
+    super(name, "Interest event for " + account.getName() + " account.", recurrence, nextRun);
+    this.account = account;
+  }
 
-    //for transactions
-    public String getDescription() {
-        return "Interest for " + account.getName() + " for " + yearMonth.getMonth() + " " + yearMonth.getYear(); 
-    }
-
-    public FinancialAccount getAccount() {
-        return account;
-    }
+  public FinancialAccount getAccount() {
+    return account;
+  }
 }

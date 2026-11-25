@@ -154,4 +154,24 @@ public class Transaction {
     status = TransactionStatus.CANCELLED;
     cancelledAt = Instant.now();
   }
+
+  public Instant getCreatedAt() {
+    return createdAt;
+  }
+
+  public Instant getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public Instant getInitiatedAt() {
+    return initiatedAt;
+  }
+
+  public Instant getCancelledAt() {
+    return cancelledAt;
+  }
+
+  public String getDescription() {
+    return description;
+  }
 }

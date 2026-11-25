@@ -22,6 +22,8 @@ public abstract class ScheduledEvent {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
+  private String description;
+
   @Column(nullable = false)
   private String name;
 
@@ -61,8 +63,9 @@ public abstract class ScheduledEvent {
     // JPA
   }
 
-  public ScheduledEvent(String name, Recurrence recurrence, LocalDate nextRun) {
+  public ScheduledEvent(String name, String description, Recurrence recurrence, LocalDate nextRun) {
     this.name = name;
+    this.description = description;
     this.recurrence = recurrence;
     this.nextRun = nextRun;
   }
@@ -79,7 +82,32 @@ public abstract class ScheduledEvent {
 
   // the last time this scheduled event ran, not necessarily that its corresponding transaction
   // occured.
-  public Instant getLastRun() {
+  public LocalDate getLastRun() {
     return lastRun;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void cancel() {
+    if (cancelledAt != null) {
+      throw new IllegalStateException("Transaction is already: cancelled");
+    }
+    active = false;
+    cancelledAt = Instant.now();
+  }
+
+  public Recurrence getRecurrence() {
+    return recurrence;
+  }
+
+  public LocalDate getNextRun() {
+    return nextRun;
+  }
+
+  public void setNextRun(LocalDate next) {
+    lastRun = nextRun;
+    nextRun = next;
   }
 }

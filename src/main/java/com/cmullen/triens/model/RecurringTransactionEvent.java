@@ -12,9 +12,6 @@ import org.hibernate.type.SqlTypes;
 
 @Entity
 public class RecurringTransactionEvent extends ScheduledEvent {
-
-  private String description;
-
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private TransactionType type;
@@ -30,9 +27,16 @@ public class RecurringTransactionEvent extends ScheduledEvent {
       LocalDate nextRun,
       Recurrence recurrence,
       String name) {
-    super(name, recurrence, nextRun);
-    this.description = description;
+    super(name, description, recurrence, nextRun);
     this.type = type;
     entryTemplates = entries;
+  }
+
+  public TransactionType getType() {
+    return type;
+  }
+
+  public List<CreateTransactionEntryRequest> getEntryRequests() {
+    return entryTemplates;
   }
 }
